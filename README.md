@@ -1,5 +1,5 @@
 # R-stats
-## 1.Pilot_study_analysis
+## 1. Pilot_study_analysis
 Dataset from a pilot within-subjects study.
 We want to plan a research study about the association between the time of the day and the levels of people’s statistical skills
 
