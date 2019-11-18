@@ -18,31 +18,31 @@ Inspect univariate distributions and bivariate associations, perform a multiple 
 
 The data set contained these variables:
 
-- gender		participant sex (males = 0; females =1)
-- sperform	social performance (0 to 25, with higher scores indicating better performance)
-- sskills		social skills (1 = unskilled to 5 = very skilled)
-- scomplex	social complexity (1 = low complexity to 5 = high complexity)
-- sIQ		social intelligence (1 = low intelligence to 5 = high intelligence)
+- gender &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;		participant sex (males = 0; females =1)
+- sperform &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;	social performance (0 to 25, with higher scores indicating better performance)
+- sskills &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; social skills (1 = unskilled to 5 = very skilled)
+- scomplex &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;	social complexity (1 = low complexity to 5 = high complexity)
+- sIQ	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;	social intelligence (1 = low intelligence to 5 = high intelligence)
 
 We had to test gender differences, the moderation of social skills on association between social complexity and performance
 as well as the moderation of gender and social intelligence on association between social skills and social complexity.
 
 The script includes the preliminary analysis (part A) and the multiple regression analysis (part B).
 
-##3. Mixed-effects_model_analysis
+## 3. Mixed-effects_model_analysis
 In this study, each participant was asked to rate the attractiveness of 12 options, each of them being a
 specific monetary reward delivered at a specific time.
 Interested whether and how the attractiveness of a reward is influenced by the time of delivery and the magnitude of 
 the reward (i.e., the amount), and whether these things differ between different age groups.
 
 First dataset:
-- pp_code      Participant's code
-- Delay        Time of delivery as a continuous variable with values 0, 1, 2, and 3.
-- Amount       Amount of reward as a continuous variable with values 10, 50, 90 (as euros).
-- Rating       Participants ratings for attractiveness, continuous variable from 0 to 100.
+- pp_code &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  Participant's code
+- Delay &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Time of delivery as a continuous variable with values 0, 1, 2, and 3.
+- Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Amount of reward as a continuous variable with values 10, 50, 90 (as euros).
+- Rating &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Participants ratings for attractiveness, continuous variable from 0 to 100.
 Second dataset:
-- pp_code      Participant's code
-- AgeGroup     Age of participants, categorical variable with values "children", "adolescents", "adults".    
+- pp_code &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Participant's code
+- AgeGroup &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Age of participants, categorical variable with values "children", "adolescents", "adults".    
 
 
 
