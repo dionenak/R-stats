@@ -16,13 +16,13 @@ Analysis includes: inspection, removal of NAs, visualization of the dependent va
 To test research questions involving moderation hypotheses.
 Inspect univariate distributions and bivariate associations, perform a multiple linear regression with two- and three-way interactions.
 
-The data set contained these variables:
+The dataset contained these variables:
 
-- gender		participant sex (males = 0; females =1)
-- sperform	social performance (0 to 25, with higher scores indicating better performance)
-- sskills		social skills (1 = unskilled to 5 = very skilled)
-- scomplex	social complexity (1 = low complexity to 5 = high complexity)
-- sIQ		social intelligence (1 = low intelligence to 5 = high intelligence)
+- gender: Participant's gender (Males = 0; Females =1)
+- sperform: Social performance (0 to 25, with higher scores indicating better performance)
+- sskills: Social skills (1 = unskilled to 5 = very skilled)
+- scomplex: Social complexity (1 = low complexity to 5 = high complexity)
+- sIQ: Social intelligence (1 = low intelligence to 5 = high intelligence)
 
 We had to test gender differences, the moderation of social skills on association between social complexity and performance
 as well as the moderation of gender and social intelligence on association between social skills and social complexity.
@@ -36,15 +36,39 @@ Interested whether and how the attractiveness of a reward is influenced by the t
 the reward (i.e., the amount), and whether these things differ between different age groups.
 
 First dataset:
-- pp_code      Participant's code
-- Delay        Time of delivery as a continuous variable with values 0, 1, 2, and 3.
-- Amount       Amount of reward as a continuous variable with values 10, 50, 90 (as euros).
-- Rating       Participants ratings for attractiveness, continuous variable from 0 to 100.
+- pp_code: Participant's code
+- Delay: Time of delivery as a continuous variable with values 0, 1, 2, and 3.
+- Amount: Amount of reward as a continuous variable with values 10, 50, 90 (as euros).
+- Rating: Participants ratings for attractiveness, continuous variable from 0 to 100.
 Second dataset:
-- pp_code      Participant's code
-- AgeGroup     Age of participants, categorical variable with values "children", "adolescents", "adults".    
+- pp_code: Participant's code
+- AgeGroup: Age of participants, categorical variable with values "children", "adolescents", "adults".    
 
 
 
 Script includes all the preparatory steps (such as loading the data,merging data frames, preparing the variables etc.),
 diagnostics before running the models, running the models, diagnostics after running the models, obtaining p values and figures.
+
+##4. Structural_Equation_Model_analysis
+The present study examines the associations between school quality, home environment, student achievement, and CITO test scores.
+Creating latent constructs of school quality and home quality, and examining whether these latent constructs predict an observed 
+measure of student achievement. Specifically, school quality describes three indicators: an overall rating of the school (school), 
+an evaluation of teachers’ qualifications and ability (teacher), and the “likeability” ratings from classmates (accept). The home 
+environment includes three indicators: the highest level of education of parents (educate), the total household income (income), 
+and a measure of parental involvement in educational activities (involve). Achievement describes teacher reports of child academic 
+and social-emotional development (achieve). In addition, this study examines the link between achievement and CITO test scores.
+
+Dataset included:
+
+Sex:     coded (female = 1, male = 2)
+Educate: Parent reports of highest education level obtained by child’s mother and father
+Income: Parent reports of total household income.
+Involve: Parent reports of involvement in educational and school-related activities.
+School: Rating of overall school quality 
+Teach: Evaluation of teacher in terms of qualifications and ability
+Accept: Likeability ratings by classmates (social preference).
+Achieve: Child’s score on teacher report of academic and socio-emotional competence.
+CITO: Child’s score on the standardized academic test
+
+
+Script includes the inspection of the data (part A) and the proper specification of SEMs to test a set of hypotheses (part B).
