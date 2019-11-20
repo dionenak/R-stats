@@ -18,18 +18,20 @@ Inspect univariate distributions and bivariate associations, perform a multiple 
 
 The dataset contained these variables:
 
+
 - gender: Participant's gender (Males = 0; Females =1)
 - sperform: Social performance (0 to 25, with higher scores indicating better performance)
 - sskills: Social skills (1 = unskilled to 5 = very skilled)
 - scomplex: Social complexity (1 = low complexity to 5 = high complexity)
 - sIQ: Social intelligence (1 = low intelligence to 5 = high intelligence)
 
+
 We had to test gender differences, the moderation of social skills on association between social complexity and performance
 as well as the moderation of gender and social intelligence on association between social skills and social complexity.
 
 The script includes the preliminary analysis (part A) and the multiple regression analysis (part B).
 
-##3. Mixed-effects_model_analysis
+## 3. Mixed-effects_model_analysis
 In this study, each participant was asked to rate the attractiveness of 12 options, each of them being a
 specific monetary reward delivered at a specific time.
 Interested whether and how the attractiveness of a reward is influenced by the time of delivery and the magnitude of 
@@ -43,6 +45,7 @@ First dataset:
 Second dataset:
 - pp_code: Participant's code
 - AgeGroup: Age of participants, categorical variable with values "children", "adolescents", "adults".    
+
 
 
 
@@ -72,3 +75,4 @@ CITO: Child’s score on the standardized academic test
 
 
 Script includes the inspection of the data (part A) and the proper specification of SEMs to test a set of hypotheses (part B).
+
