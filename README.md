@@ -52,7 +52,7 @@ Second dataset:
 Script includes all the preparatory steps (such as loading the data,merging data frames, preparing the variables etc.),
 diagnostics before running the models, running the models, diagnostics after running the models, obtaining p values and figures.
 
-##4. Structural_Equation_Model_analysis
+## 4. Structural_Equation_Model_analysis
 The present study examines the associations between school quality, home environment, student achievement, and CITO test scores.
 Creating latent constructs of school quality and home quality, and examining whether these latent constructs predict an observed 
 measure of student achievement. Specifically, school quality describes three indicators: an overall rating of the school (school), 
