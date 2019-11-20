@@ -4,39 +4,39 @@
 options(contrasts = c("contr.sum", "contr.poly"))
 
 #Loading the datasets
-ratings<-read.csv("RatingData_TH2019.csv")
-age<-read.csv("AgeGroups_TH2019.csv")
+ratings<-read.csv("RatingData.csv")
+age<-read.csv("AgeGroups.csv")
 ratings
 age
 
 #Inspection
 summary(ratings$pp_code)
 
-##All participants gave 12 ratings each.Good!
-##Now i have to merge datasets.
+## All participants gave 12 ratings each.Good!
+## Now i have to merge datasets.
 rat<-merge(ratings,age,by="pp_code")
-##Checking the variables
+## Checking the variables
 summary(rat$Amount)
 summary(rat$Delay)
 summary(rat$Rating)
-summary(age) # if i try the summary(rat) for the number of agegroups, I get different results from 
-##what i want 
+summary(age) # If i try the summary(rat) for the number of agegroups, I get different results from 
+## what i want 
 ## NAs values
 unique(is.na(rat)) # No missing values
-##Center the predictors!
+## Center the predictors!
 rat$Delayc<- scale(rat$Delay, center = TRUE, scale = FALSE)
 rat$Amountc<- scale(rat$Amount, center = TRUE, scale = FALSE)
 
 
-#Plotting the raw data
+# Plotting the raw data
 
-library(lattice)#For densityplot
+library(lattice) # For densityplot
 with(rat, densityplot(~ Rating, groups = AgeGroup, auto.key = TRUE))
 with(rat, densityplot(~ Rating | AgeGroup))
 xyplot(Rating ~ Delay | AgeGroup, data = rat, type = c('r','p'), xlim = c(0, 4))
 xyplot(Rating ~ Amount | AgeGroup, data = rat, type = c('r','p'), xlim = c(0,100))
 
-#Checking whether there are higher-order relationships than linear between IVs and DV
+# Checking whether there are higher-order relationships than linear between IVs and DV
 with(rat, densityplot(~Rating | Amount))
 with(rat, densityplot(~Rating | Delay))
 xyplot(Rating ~ Delay, data = rat, type = c('r','p'), xlim = c(0, 4))
@@ -44,31 +44,31 @@ xyplot(Rating ~ Amount, data = rat, type = c('r','p'), xlim = c(0,100))
 xyplot(Rating ~ Amount | pp_code, data = rat, type = c('p', 'r'))
 xyplot(Rating ~ Delay | pp_code, data = rat, type = c('p', 'r'))
 
-#Trying to figure out the model
-##we have to see which variables could be random slopes of the 5 we are interested in: Amount, Delay,
-##AgeGroups, AgeGroups:Delay, AgeGroups:Amount
-with(rat, table(AgeGroup, pp_code)) #Age doesn't vary between participants
+# Trying to figure out the model
+## We have to see which variables could be random slopes of the 5 we are interested in: Amount, Delay,
+## AgeGroups, AgeGroups:Delay, AgeGroups:Amount
+with(rat, table(AgeGroup, pp_code))# Age doesn't vary between participants
 with(rat,table(Delay,pp_code))# Delay does vary between participants
-with(rat,table(Amount,pp_code))#Amount does vary between participants
-with(rat,table(Amount,AgeGroup,pp_code))#The interaction between Amount and age groups does not 
-#vary between participants
-with(rat,table(Delay,AgeGroup,pp_code))#The interaction between Delay and age groups does not
-#vary between participants
+with(rat,table(Amount,pp_code))# Amount does vary between participants
+with(rat,table(Amount,AgeGroup,pp_code)) # The interaction between Amount and age groups does not 
+# vary between participants
+with(rat,table(Delay,AgeGroup,pp_code)) # The interaction between Delay and age groups does not
+# vary between participants
 
-#Our model
+# Our model
 library(lme4)
 model<-lme4::lmer(Rating~AgeGroup+Delayc+Amountc+Amountc:AgeGroup+Delayc:AgeGroup+(1+(Delayc+Amountc)|pp_code),data=rat)
 
-##I am going to use the trick to see if my random effects could be estimated
+## I am going to use the trick to see if my random effects could be estimated
 ## 1. Take the data from one single "unit" (i.e., here a participant)
 rat1<- rat[rat$pp_code == 'pp_1', ]
 rat1
-##2.  Run an lm() model with my random effects of the lmer model
+## 2.  Run an lm() model with my random effects of the lmer model
 lm_check <- lm(Rating ~ 1 + Delayc+Amountc, data = rat1)
-summary(lm_check) #It was possible to run the model, so in principle, I will be able to run the model
-#with those random effects.
+summary(lm_check) # It was possible to run the model, so in principle, I will be able to run the model
+# with those random effects.
 ## Now i will look the summary of my model to see whether there is something wrong and that's why i
-##get warning messages
+## get warning messages
 summary(model)
 
 ## So to get the *number* of fixed effects in the model:
@@ -87,19 +87,19 @@ rat$Amounts<- scale(rat$Amount, center = F, scale = TRUE)
 model1<-lme4::lmer(Rating~AgeGroup+Delays+Amounts+Amounts:AgeGroup+Delays:AgeGroup+(1+(Delays+Amounts)|pp_code),data=rat)
 summary(model1)
 
-#Diagnostic Plots
+# Diagnostic Plots
 densityplot(resid(model, scaled = TRUE))
 library(car)
 qqPlot(scale(resid(model)))
 plot(model, type = c('p', 'smooth'))
 with(rat, plot(Rating, fitted(model)))
 with(rat, abline(lm(fitted(model) ~ Rating), col = 'red'))
-##Also checking the proportion of residuals
+## Also checking the proportion of residuals
 sum(abs(resid(model1, scaled = TRUE)) > 2) / length(resid(model1))
 sum(abs(resid(model1, scaled = TRUE)) > 2.5) / length(resid(model1))
 sum(abs(resid(model1, scaled = TRUE)) > 3) / length(resid(model1))
 
-##Influence statistics
+## Influence statistics
 infl_model1 <- influence(model1, group = "pp_code")
 infIndexPlot(infl_model1)# we cannot really tell, too many participants
 max(cooks.distance(infl_model1))
@@ -109,11 +109,11 @@ sum(abs(dfbeta(infl_model1)) > 2/sqrt(length(unique(rat$pp_code))))
 hits <- which(abs(dfbeta(infl_model1)) > 2/sqrt(length(unique(rat$pp_code)))) 
 summary(rat$pp_code[hits])
 
-##Check the p values
+## Check the p values
 Anova(model1, type = 3, test = "F")
 
-#Follow up models: both interaction and main affect of age are significant
-##Each model with their diagnostic
+# Follow up models: both interaction and main affect of age are significant
+## Each model with their diagnostic
 
 ## Adolescents-Adults
 library(afex)#for mixed() function
@@ -140,7 +140,7 @@ sum(abs(resid(model_AdolAdul , scaled = TRUE)) > 2) / length(resid(model_AdolAdu
 sum(abs(resid(model_AdolAdul , scaled = TRUE)) > 2.5) / length(resid(model_AdolAdul)) # 0.01190476
 sum(abs(resid(model_AdolAdul , scaled = TRUE)) > 3) / length(resid(model_AdolAdul)) # 0
 
-##Adolescents-Children
+## Adolescents-Children
 rat_AdolChil <-droplevels(subset(rat, AgeGroup == "Adolescents" | AgeGroup == "Children" ))
 summary(rat_AdolChil)
 rat_AdolChil$pp_code
@@ -163,7 +163,7 @@ sum(abs(resid(model_AdolChil , scaled = TRUE)) > 2) / length(resid(model_AdolChi
 sum(abs(resid(model_AdolChil, scaled = TRUE)) > 2.5) / length(resid(model_AdolChil)) #  0.01302083
 sum(abs(resid(model_AdolChil , scaled = TRUE)) > 3) / length(resid(model_AdolChil)) #  0.005208333
 
-##Adults-Children
+## Adults-Children
 rat_AdulChil <-droplevels(subset(rat, AgeGroup == "Adults" | AgeGroup == "Children" ))
 summary(rat_AdulChil)
 rat_AdulChil$pp_code
@@ -179,15 +179,15 @@ anova(mixed_modelAdulChil)
 ## Diagnostic plots
 densityplot(resid(model_AdulChil , scaled = TRUE)) # looks pretty ok
 qqPlot(resid(model_AdulChil, scaled = TRUE)) # looks pretty ok (it looks like there might be some outliers, but I'll check 
-#when I compute the proportions below)
+# when I compute the proportions below)
 plot(model_AdulChil, type = c('p', 'smooth')) # ok
 ## Compute the proportions of residuals for +/- 2, 2.5, 3
 sum(abs(resid(model_AdulChil , scaled = TRUE)) > 2) / length(resid(model_AdulChil))  # 0.04032258
 sum(abs(resid(model_AdulChil, scaled = TRUE)) > 2.5) / length(resid(model_AdulChil)) #  0.002688172
 sum(abs(resid(model_AdulChil , scaled = TRUE)) > 3) / length(resid(model_AdulChil)) # 0
 
-#Further follow up model to see each age group differently
-##Adolescents
+# Further follow up model to see each age group differently
+## Adolescents
 rat_Adol <- droplevels(subset(rat, AgeGroup == "Adolescents" ))
 ## Standardize
 rat_Adol$Delays<- scale(rat_Adol$Delay, center = T, scale = T)
@@ -199,7 +199,7 @@ summary(model_Adol)
 mixed_modelAdol <- mixed(Rating~Delays+Amounts+(1+(Delays+Amounts)|pp_code),data=rat_Adol, type = 3, method = "KR",
 test_intercept = TRUE,control = lmerControl(optimizer = "bobyqa"))
 anova(mixed_modelAdol)
-## Diagnostic
+## Diagnostics
 densityplot(resid(model_Adol , scaled = TRUE)) # looks pretty ok
 qqPlot(resid(model_Adol, scaled = TRUE)) # looks pretty ok (it looks like there are outliers. I'll check when I
 #compute the proportions)
@@ -209,7 +209,7 @@ sum(abs(resid(model_Adol , scaled = TRUE)) > 2) / length(resid(model_Adol))  # 0
 sum(abs(resid(model_Adol, scaled = TRUE)) > 2.5) / length(resid(model_Adol)) #  0.01851852
 sum(abs(resid(model_Adol , scaled = TRUE)) > 3) / length(resid(model_Adol)) # 0
 
-##Adults
+## Adults
 rat_Adul <- droplevels(subset(rat, AgeGroup == "Adults" ))
 summary(rat_Adul)
 rat_Adul$pp_code
@@ -224,7 +224,7 @@ summary(model_Adul)
 mixed_modelAdul <- mixed(Rating~Delays+Amounts+(1+(Delays+Amounts)|pp_code),data=rat_Adul, type = 3, method = "KR",
 test_intercept = TRUE,control = lmerControl(optimizer = "bobyqa"))
 anova(mixed_modelAdul)
-## Diagnostic
+## Diagnostics
 densityplot(resid(model_Adul , scaled = TRUE)) # looks ok
 qqPlot(resid(model_Adul, scaled = TRUE)) # looks pretty ok 
 plot(model_Adul, type = c('p', 'smooth')) # not that good, but ok
@@ -233,7 +233,7 @@ sum(abs(resid(model_Adul , scaled = TRUE)) > 2) / length(resid(model_Adul))  #  
 sum(abs(resid(model_Adul, scaled = TRUE)) > 2.5) / length(resid(model_Adul)) #  0
 sum(abs(resid(model_Adul , scaled = TRUE)) > 3) / length(resid(model_Adul)) # 0
 
-##Children
+## Children
 rat_Chil <- droplevels(subset(rat, AgeGroup == "Children" ))
 summary(rat_Chil$pp_code)
 
@@ -246,7 +246,7 @@ control = lmerControl(optimizer = "bobyqa"))#singularity
 model_Chil_norandcor <- lme4::lmer(Rating~Delays+Amounts+((1+(Delays+Amounts))||pp_code),data=rat_Chil,
 control = lmerControl(optimizer = "bobyqa"))#remove random correlations but again singularity
 model_Chil_default <- lme4::lmer(Rating~Delays+Amounts+((1+(Delays+Amounts))||pp_code),data=rat_Chil)
-#remove random correlations,again singularity
+# Remove random correlations,again singularity
 
 
 library(dfoptim)
@@ -254,13 +254,13 @@ allFit_model_Chil <- allFit(model_Chil_default)
 summ_allFit_model_Chil <- summary(allFit_model_Chil)
 summ_allFit_model_Chil$fixef
 summ_allFit_model_Chil$sdcor
-##The results are pretty similar, false positive!
+## The results are pretty similar, false positive!
 summary(model_Chil)
 mixed_modelChil <- mixed(Rating~Delays+Amounts+(1+(Delays+Amounts)|pp_code),data=rat_Chil, type = 3, method = "KR",
 test_intercept = TRUE,control = lmerControl(optimizer = "bobyqa"))
 anova(mixed_modelChil)
 
-##Diagnostic
+## Diagnostic
 densityplot(resid(model_Chil , scaled = TRUE)) # looks pretty ok
 qqPlot(resid(model_Chil, scaled = TRUE)) # looks pretty ok (it looks like there are outliers. I'll check when I
 #compute the proportions)
